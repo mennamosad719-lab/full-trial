@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicine III — Question Bank</title>
+  <style>
+    :root {
+      --bg: #eef5f8;
+      --card: #ffffff;
+      --teal: #1d7593;
+      --teal-dark: #155970;
+      --teal-light: #e2f1f6;
+      --text: #102a36;
+      --muted: #5c7682;
+      --border: #d5e4eb;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --green-text: #166534;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --red-text: #991b1b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 60px; }
+    h1, h2, h3, .serif { font-family: Georgia, "Times New Roman", serif; }
+
+    header { max-width: 1050px; margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-family: Georgia, serif; font-size: 22px; font-weight: bold; color: var(--text); cursor: pointer; }
+    nav a { margin-left: 20px; text-decoration: none; color: var(--muted); font-weight: 500; cursor: pointer; font-size: 15px; }
+    nav a.active { color: var(--teal); font-weight: 700; text-decoration: underline; }
+
+    .container { max-width: 1050px; margin: 0 auto; padding: 0 24px; }
+
+    .hero-title { font-size: 32px; margin: 12px 0 6px; color: var(--text); }
+    .hero-sub { color: var(--muted); margin-bottom: 20px; font-size: 15px; }
+    .countdown-card { background: var(--teal); color: white; border-radius: 14px; padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(29,117,147,0.15); }
+    .countdown-label { font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+    .countdown-days { font-family: Georgia, serif; font-size: 28px; font-weight: bold; }
+    .countdown-action { font-size: 14px; opacity: 0.9; cursor: pointer; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 22px 0; }
+    .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+    .stat-num { font-family: Georgia, serif; font-size: 26px; font-weight: bold; color: var(--teal); }
+    .stat-lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .search-bar { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); font-size: 15px; margin-bottom: 28px; outline: none; }
+    .search-bar:focus { border-color: var(--teal); }
+
+    .section-title { font-size: 22px; margin-bottom: 16px; }
+    .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; margin-bottom: 32px; }
+    .subject-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; cursor: pointer; transition: 0.15s; }
+    .subject-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .subject-icon { width: 38px; height: 38px; background: var(--teal); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-weight: bold; font-size: 18px; margin-bottom: 14px; }
+    .subject-name { font-family: Georgia, serif; font-size: 19px; font-weight: bold; margin-bottom: 10px; }
+    .badge { display: inline-block; background: var(--teal-light); color: var(--teal-dark); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
+    .q-count { font-size: 13px; color: var(--muted); }
+
+    .back-link { display: inline-block; color: var(--muted); text-decoration: none; margin-bottom: 12px; cursor: pointer; font-size: 14px; }
+    .action-bar { display: flex; gap: 12px; margin: 16px 0 24px; flex-wrap: wrap; }
+    .btn { padding: 11px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: var(--teal); color: white; border-color: var(--teal); }
+    .btn-primary:hover { background: var(--teal-dark); }
+    .lecture-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .lecture-title { font-family: Georgia, serif; font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+    .lecture-meta { font-size: 13px; color: var(--muted); }
+    .lecture-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .score-pill { background: var(--green-bg); color: var(--green-text); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .timer { font-family: monospace; font-size: 18px; font-weight: bold; color: var(--teal-dark); background: var(--card); padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); }
+    .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 26px; margin-bottom: 18px; }
+    .q-progress { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .q-text { font-family: Georgia, serif; font-size: 20px; font-weight: bold; line-height: 1.45; margin-bottom: 20px; }
+    .option-btn { width: 100%; text-align: left; padding: 15px 18px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); font-size: 15px; cursor: pointer; transition: 0.1s; line-height: 1.4; }
+    .option-btn:hover:not(:disabled) { border-color: var(--teal); background: #f8fbfc; }
+    .option-btn.correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); font-weight: 600; }
+    .option-btn.wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+    .feedback-banner { padding: 14px 18px; border-radius: 10px; margin-top: 12px; font-size: 14px; font-weight: 500; background: var(--teal-light); color: var(--teal-dark); }
+    .flag-btn { margin-top: 14px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; text-decoration: underline; }
+    .flag-btn.flagged { color: #d97706; font-weight: bold; }
+
+    .nav-controls { display: flex; justify-content: space-between; margin-bottom: 18px; }
+    .q-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .grid-num { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-weight: 600; cursor: pointer; }
+    .grid-num.current { background: var(--teal); color: white; border-color: var(--teal); }
+    .grid-num.answered-ok { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .grid-num.answered-bad { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+    .grid-num.flagged { border: 2px solid #f59e0b; }
+
+    .result-hero { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-bottom: 20px; }
+    .big-score { font-family: Georgia, serif; font-size: 44px; font-weight: bold; color: var(--teal); margin: 12px 0; }
+    .filter-tabs { display: flex; gap: 10px; margin-bottom: 18px; }
+    .filter-tab { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); font-weight: 600; cursor: pointer; }
+    .filter-tab.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+    .admin-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+    .admin-box input, .admin-box textarea, .admin-box select { width: 100%; padding: 12px; margin: 8px 0 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+    .disclaimer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .hidden { display: none !important; }
+    @media (max-width: 650px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="showHome()">Medicine III Bank</div>
+  <nav>
+    <a id="nav-home" class="active" onclick="showHome()">Home</a>
+    <a id="nav-admin" onclick="showAdmin()">Admin</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div id="view-home">
+    <h1 class="hero-title">Good afternoon, doctor-to-be.</h1>
+    <p class="hero-sub">Pick a subject, set the timer, and learn from every mistake.</p>
+
+    <div class="countdown-card">
+      <div>
+        <div class="countdown-label" id="exam-label">Medicine III Mid-Exam</div>
+        <div class="countdown-days" id="days-left">30 days</div>
+      </div>
+      <div class="countdown-action" onclick="editExamDate()">Set exam date →</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-num" id="stat-exams">0</div><div class="stat-lbl">Exams</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-qs">0</div><div class="stat-lbl">Questions</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-took">0</div><div class="stat-lbl">You took</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-avg">0%</div><div class="stat-lbl">Your avg</div></div>
+    </div>
+
+    <input type="text" class="search-bar" id="search-input" placeholder="Search exams or topics..." oninput="renderHome()" />
+
+    <h2 class="section-title">Term 1 — Medicine III</h2>
+    <div class="subject-grid" id="subject-grid"></div>
+  </div>
+
+  <div id="view-subject" class="hidden">
+    <a class="back-link" onclick="showHome()">← Home</a>
+    <h1 class="hero-title" id="subj-title">Subject</h1>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="startMixedQuiz(true)">🔀 Shuffled exam: all questions</button>
+      <button class="btn" onclick="startMixedQuiz(false)">🎲 Random mixed quiz (10 questions)</button>
+    </div>
+    <div id="lecture-list"></div>
+  </div>
+
+  <div id="view-quiz" class="hidden">
+    <a class="back-link" onclick="exitQuiz()">← Back to exams</a>
+    <div class="quiz-header">
+      <div>
+        <h3 id="quiz-title">Lecture</h3>
+        <div class="q-progress" id="quiz-answered-count">0 of 0 answered</div>
+      </div>
+      <div class="timer" id="quiz-timer">30:00</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-progress" id="q-number-label">Question 1 of 10</div>
+      <div class="q-text" id="q-text">Question text</div>
+      <div id="options-container"></div>
+      <div id="feedback-box" class="feedback-banner hidden"></div>
+      <button class="flag-btn" id="flag-btn" onclick="toggleFlag()">⚑ Flag for review</button>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn" onclick="prevQuestion()">← Prev</button>
+      <button class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+    </div>
+
+    <div class="q-grid" id="q-grid"></div>
+    <button class="btn btn-primary" onclick="finishQuiz()">Finish & see score</button>
+  </div>
+
+  <div id="view-results" class="hidden">
+    <div class="result-hero">
+      <h2 id="res-title">Exam Results</h2>
+      <div class="big-score" id="res-score">0 / 0</div>
+      <p id="res-msg" style="color: var(--muted); margin-bottom: 18px;"></p>
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button class="btn btn-primary" onclick="retakeLast()">Retake</button>
+        <button class="btn" onclick="exitQuiz()">Back to exams</button>
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" id="tab-all" onclick="renderResultsList('all')">All</button>
+      <button class="filter-tab" id="tab-wrong" onclick="renderResultsList('wrong')">Wrong only</button>
+    </div>
+    <div id="results-review-list"></div>
+  </div>
+
+  <div id="view-admin" class="hidden">
+    <h1 class="hero-title">Admin — Add Questions</h1>
+    <p class="hero-sub">Paste MCQs below to add a new lecture, then download the updated file to upload to GitHub.</p>
+
+    <div class="admin-box">
+      <label><b>Subject</b></label>
+      <select id="adm-subject">
+        <option value="Cardiology">Cardiology</option>
+        <option value="Pulmonology">Pulmonology</option>
+        <option value="Hematology & Nephrology">Hematology & Nephrology</option>
+      </select>
+
+      <label><b>Lecture Title</b></label>
+      <input type="text" id="adm-lecture" placeholder="e.g. Thyroid Disorders" />
+
+      <label><b>Paste Questions (Put * at the end of the correct choice)</b></label>
+      <textarea id="adm-raw" rows="10" placeholder="1. What is the most common cause of mitral stenosis?
+A. Rheumatic fever*
+B. Infective endocarditis
+C. Calcification
+D. Congenital
+
+2. Next question here..."></textarea>
+
+      <button class="btn btn-primary" onclick="importQuestions()">+ Add Lecture to Bank</button>
+      <button class="btn" style="margin-left:10px;" onclick="downloadUpdatedHTML()">⬇ Download Updated index.html</button>
+    </div>
+  </div>
+
+  <div class="disclaimer">This is for informational purposes only. For medical advice or diagnosis, consult a professional. AI responses may include mistakes.</div>
+</div>
+
+<script>
+const DEFAULT_DATA = {
+  "Cardiology": [
+    {
+      title: "Rheumatic Fever",
+      minutes: 15,
+      questions: [
+        { q: "The most common presenting symptom of rheumatic fever is:", opts: ["Carditis", "Arthritis", "Sydenham's chorea", "Subcutaneous nodules", "Erythema marginatum"], ans: 1 },
+        { q: "You reviewed a 15-year-old female with rheumatic fever needing secondary prophylaxis. Which antibiotic can be used with a history of penicillin allergy?", opts: ["Cephalosporin", "Macrolides", "Gentamycin", "Quinolones", "Doxycycline"], ans: 1 },
+        { q: "You reviewed a 15-year-old female with previous rheumatic fever with carditis commencing long-acting benzathine penicillin G. How long will you recommend prophylaxis?", opts: ["5 years after last attack or 18 years of age", "10 years after last attack, or 25 years of age", "10 years after last attack, or 30 years of age", "5 years after last attack, or 25 years of age", "10 years after last attack, or 18 years of age"], ans: 1 },
+        { q: "Regarding carditis of rheumatic fever, which of the following is NOT true?", opts: ["It is the most serious complication of ARF", "It affects all layers of the heart (pancarditis)", "It is common in children", "It responds to Corticosteroids", "It responds dramatically to Aspirin (salicylates)"], ans: 4 },
+        { q: "Regarding arthritis of rheumatic fever, which of the following is NOT true?", opts: ["It affects large joints e.g. ankles and knees", "Affected joint is hot, red, tender & swollen with limitation of movement", "It has a fleeting or migratory character", "It leaves the joint with deformity", "It occurs more in adults than children"], ans: 3 },
+        { q: "Regarding subcutaneous nodules of rheumatic fever, which is NOT true?", opts: ["Occurs over bony prominences such as spine & mastoid processes", "It is subcutaneous, attached to tendon sheaths", "It is tender", "It usually indicates severe carditis", "It occurs in less than 5%"], ans: 2 },
+        { q: "Regarding myocarditis of rheumatic fever, which of the following is NOT true?", opts: ["Tachycardia proportionate to fever", "Gallop rhythm", "Rapid cardiac enlargement", "Dysrhythmias", "Heart failure"], ans: 0 },
+        { q: "Regarding Sydenham's chorea of rheumatic fever, which is NOT true?", opts: ["It is rapid involuntary movement", "It is more common in females", "It occurs in 30% of cases", "It is one of the major criteria for diagnosis", "Evidence of preceding Group A Streptococcal infection is always required for diagnosis"], ans: 4 },
+        { q: "Rheumatic fever occurs after upper respiratory tract infection by:", opts: ["Group A beta-hemolytic streptococci", "Staph aureus", "Enterococcus", "Haemophilus influenzae", "Pseudomonas aeruginosa"], ans: 0 }
+      ]
+    },
+    {
+      title: "Infective Endocarditis",
+      minutes: 15,
+      questions: [
+        { q: "Which of the following organisms is NOT commonly implicated in infective endocarditis?", opts: ["Staph aureus", "Viridans streptococci", "Enterococci", "Group A streptococci", "Fungal infection"], ans: 3 },
+        { q: "Regarding treatment of infective endocarditis, which is FALSE?", opts: ["Clinical cure always needs aminoglycosides and beta-lactam antibiotics", "Prolonged course of antibiotics is needed", "Bactericidal antibiotics are necessary", "High dose parenteral therapy is needed for vegetations", "Prophylactic treatment may be needed"], ans: 0 },
+        { q: "In patients with sub-acute endocarditis, which laboratory finding does NOT support the diagnosis?", opts: ["Normocytic anemia", "Proteinuria", "Decreased ESR", "Thrombocytopenia", "Increased CRP"], ans: 2 },
+        { q: "The following situations may lead to culture-negative endocarditis EXCEPT:", opts: ["Use of antibiotics before culture", "Nonbacterial etiology", "HACEK group", "Subacute left-sided endocarditis", "Fungal causes"], ans: 3 },
+        { q: "Post-operative infective endocarditis is caused mainly by:", opts: ["Staph aureus", "Viridans streptococci", "Enterococci", "Group A streptococci", "Fungal infection"], ans: 0 },
+        { q: "A 40-year-old male presents with infective endocarditis confirmed by ECHO, and ultrasound shows marked enlargement of spleen and liver. Commonly suggested organism:", opts: ["Staph aureus", "Viridans streptococci", "Coxiella burnetii", "Group A streptococcus", "Fungal infection"], ans: 2 },
+        { q: "Suspected infective endocarditis with a small mass in the heart, vasculitis, and hematuria. Which is necessary in diagnosis?", opts: ["ECG", "Transesophageal ECHO (TEE)", "Ultrasound", "Urine analysis", "CRP"], ans: 1 },
+        { q: "Before culture results appear in severe infective endocarditis, empirical antibiotic therapy includes:", opts: ["Rifampicin", "Aminoglycosides alone", "Amoxicillin / Beta-lactam", "Metronidazole", "Ciprofloxacin"], ans: 2 }
+      ]
+    },
+    {
+      title: "Pericardial & Myocardial Diseases",
+      minutes: 25,
+      questions: [
+        { q: "A type of pericarditis known for sharp chest pains:", opts: ["TB Pericarditis", "Constrictive Pericarditis", "Fibrinous / Acute Pericarditis", "Restrictive pericarditis"], ans: 1 },
+        { q: "Myocarditis is usually caused by:", opts: ["Coxsackie A", "Coxsackie B", "TB", "Strep pyogenes"], ans: 1 },
+        { q: "A classic ECG finding in acute pericarditis is:", opts: ["ST depression", "T wave inversion initially", "Widespread ST elevation", "Tall peaked T waves"], ans: 2 },
+        { q: "Type of pericardial fluid indicating pyogenic infection, debris, and leukocytes:", opts: ["Hemorrhagic", "Serous", "Suppurative", "Serosanguinous"], ans: 2 },
+        { q: "Typical features of acute pericarditis include all EXCEPT:", opts: ["Chest pain mimicking myocardial infarction", "Friction rub best heard in the axilla in mid-expiration", "ST elevation on ECG with upward concavity", "ECG changes that are only seen in the chest leads"], ans: 3 },
+        { q: "Typical features of constrictive pericarditis include all EXCEPT:", opts: ["Severe breathlessness", "Normal chest X-ray", "Previous history of tuberculosis", "Tachycardia and a loud third heart sound (pericardial knock)", "Marked elevation of JVP with steep x and y descent"], ans: 3 },
+        { q: "The following signs are indicative of a massive pericardial effusion EXCEPT:", opts: ["Ewart's sign", "Kussmaul's sign", "Pulsus paradoxus", "Harsh pericardial rub", "Rotch's sign"], ans: 3 },
+        { q: "In pericardial effusion, which is FALSE?", opts: ["Heart is globular", "Echo is diagnostic", "Bradycardia is not a feature", "Lung fields are plethoric"], ans: 3 },
+        { q: "The golden investigation to diagnose dilated cardiomyopathy is:", opts: ["Chest X-ray", "ECG", "Echocardiography", "Cardiac CT", "Cardiac MRI"], ans: 2 },
+        { q: "The commonest arrhythmia associated with dilated cardiomyopathy is:", opts: ["Atrial fibrillation", "Sinus bradycardia", "Ventricular fibrillation", "Heart block", "Sinus tachycardia"], ans: 0 },
+        { q: "In myocarditis, cardiac examination reveals:", opts: ["Accentuated S1", "Accentuated S2", "Muffled S1 & S2", "Absence of S3", "Mitral stenosis murmur"], ans: 2 },
+        { q: "The main drug in treatment of Hypertrophic Cardiomyopathy (HOCM):", opts: ["Beta blockers", "ACE inhibitors", "Digitalis", "Amiodarone", "Loop diuretics"], ans: 0 },
+        { q: "Echocardiography examination of dilated cardiomyopathy reveals:", opts: ["Mitral stenosis", "Regional wall motion abnormality", "Good systolic function", "Global hypokinesia", "Congenital cardiac anomaly"], ans: 3 },
+        { q: "In dilated cardiomyopathy, chest X-ray findings do NOT include:", opts: ["Enlargement of cardiac silhouette", "Pulmonary vascular redistribution", "Alveolar edema in advanced cases", "Small cardiac size", "Cardiomegaly"], ans: 3 },
+        { q: "In dilated cardiomyopathy treatment, we avoid starting with:", opts: ["Diuretics", "ACE inhibitors", "Beta blockers in large doses", "Aldosterone antagonists", "Antiarrhythmics"], ans: 2 },
+        { q: "Echocardiography in restrictive cardiomyopathy typically does NOT reveal:", opts: ["Symmetrically thickened LV walls", "Normal or slightly reduced ventricular volumes", "Systolic dysfunction", "Dilated atria", "Restrictive pericardium"], ans: 4 },
+        { q: "Causes of dilated cardiomyopathy do NOT include:", opts: ["Metabolic", "Nutritional", "Tachycardiomyopathy", "Peripartum cardiomyopathy", "Congenital cardiac anomaly"], ans: 4 }
+      ]
+    },
+    {
+      title: "Hypertension",
+      minutes: 15,
+      questions: [
+        { q: "Isolated systolic hypertension is common in:", opts: ["Young", "Elderly", "Pregnancy", "Blacks"], ans: 1 },
+        { q: "Antihypertensive agent recommended for protection against cardiovascular diseases:", opts: ["Calcium channel blockers", "Thiazide-type diuretics", "ACE inhibitors", "Alpha antagonists", "Central sympatholytics"], ans: 1 },
+        { q: "Angiotensin Receptor Blockers (ARBs) play a renoprotective effect through all EXCEPT:", opts: ["Decreasing proteinuria", "Decreasing intraglomerular pressure", "Preventing endothelial dysfunction", "Inhibiting conversion of angiotensin-I to angiotensin-II", "Blocking angiotensin-mediated renal remodeling"], ans: 3 },
+        { q: "Which of the following is a side effect of ACE inhibitors?", opts: ["Hyperkalemia", "Hypercalcemia", "Hyperglycemia", "Hypertension", "Hypermagnesemia"], ans: 0 },
+        { q: "Calcium channel blockers cause all EXCEPT:", opts: ["Pedal edema", "Flushing", "Hyperkalemia", "Headache"], ans: 2 },
+        { q: "The first-line antihypertensive in diabetic patients is:", opts: ["Diuretics", "Angiotensin-converting enzyme (ACE) inhibitors", "Beta blockers", "Calcium channel blockers"], ans: 1 },
+        { q: "A 29-year-old woman at 28 weeks gestation develops pre-eclampsia (BP 156/104 mmHg). Which drug is LEAST suitable?", opts: ["Labetalol", "Nifedipine", "Losartan", "Methyldopa", "Hydralazine"], ans: 2 },
+        { q: "A 74-year-old man has confirmed BP of 184/72 mmHg. Most appropriate first-line therapy:", opts: ["Ramipril", "Losartan", "Bendroflumethiazide", "Amlodipine", "Atenolol"], ans: 3 },
+        { q: "Lifestyle intervention for management of hypertension includes all EXCEPT:", opts: ["Regular aerobic activity 30 min/day", "Salt intake < 2.4 g/day", "Attaining and maintaining BMI > 25 kg/m²", "Diet rich in fruits and vegetables", "Moderation of alcohol consumption"], ans: 2 },
+        { q: "Hypertension management is helpful in preventing all EXCEPT:", opts: ["Coronary heart disease", "Heart failure", "Chronic kidney disease", "Deep venous thrombosis", "Cerebrovascular disease"], ans: 3 }
+      ]
+    },
+    {
+      title: "Coronary Heart Diseases & Heart Failure",
+      minutes: 30,
+      questions: [
+        { q: "Regarding myocardial infarction, which is FALSE?", opts: ["Thrombolytic therapy is contraindicated with old intracranial hemorrhage", "PCI is a proper management", "Thrombolytics include streptokinase and tPA", "Dual antiplatelet therapy is cornerstone", "CT chest with contrast is the best imaging modality for diagnosis"], ans: 4 },
+        { q: "Which is a criterion for coronary angina?", opts: ["Relieved by lying down", "Exaggerated by rest", "Radiates to left loin", "Relieved by nitrates", "Lasts for hours"], ans: 3 },
+        { q: "Regarding stable angina, which is FALSE?", opts: ["Chest pain usually lasts less than 5 min", "ECG could be normal", "Associated with positive troponin", "Antiplatelet therapy with aspirin is mandatory", "Caused by myocardial oxygen supply-demand imbalance"], ans: 2 },
+        { q: "Regarding chest pain of angina pectoris, which is FALSE?", opts: ["Radiating to left shoulder", "Relieved by rest and nitrates", "Could be associated with nausea", "Exaggerated with inspiration", "Radiates to root of neck and jaw"], ans: 3 },
+        { q: "Regarding myocardial infarction, which is TRUE?", opts: ["Coronary angiography is best imaging modality", "Positive troponin confirms diagnosis", "PCI is superior to fibrinolytic therapy", "Early anticoagulation is mandatory", "All of the above"], ans: 4 },
+        { q: "Which is TRUE regarding ischemic heart disease?", opts: ["Chest pain is stitching and localized", "CK-MB is not specific", "Nitrates do not reduce myocardial oxygen demand", "Most common etiology is coronary atherosclerotic disease", "Thrombolytics may be given with active internal bleeding"], ans: 3 },
+        { q: "Absolute contraindications to thrombolytic therapy include all EXCEPT:", opts: ["Previous hemorrhagic stroke", "Major surgery within two weeks", "Pregnancy", "Active internal bleeding", "Recent head trauma"], ans: 2 },
+        { q: "Commonest heart valve abnormality revealed after acute myocardial infarction:", opts: ["Aortic incompetence", "Mitral incompetence (regurgitation)", "Aortic stenosis", "Tricuspid stenosis"], ans: 1 },
+        { q: "Diagnosis of AMI within 6 hours depends on:", opts: ["CPK-MB2 / CPK-MB1 >= 1.5", "Increased LDH3", "Rise of SGPT > 250 IU/L", "Inverted T wave in ECG"], ans: 0 },
+        { q: "The cause of silent myocardial infarction is classically:", opts: ["Athletes", "Obesity", "Female sex", "Diabetes mellitus"], ans: 3 },
+        { q: "In right ventricular myocardial infarction, which additional therapy is needed?", opts: ["Diuretics", "Calcium gluconate", "IV fluids", "Fluid restriction"], ans: 2 },
+        { q: "One of the causes of high-output heart failure is:", opts: ["Aortic stenosis", "Ischemic heart disease", "Massive pulmonary embolism", "Thyrotoxicosis"], ans: 3 },
+        { q: "One of the causes of acute right-sided heart failure is:", opts: ["Malignant hypertension", "Left ventricular MI", "Acute mitral regurgitation", "Massive pulmonary embolism"], ans: 3 },
+        { q: "Causes of heart failure with a normal-sized heart include all EXCEPT:", opts: ["Acute heart failure", "Restrictive cardiomyopathy", "Hypertrophic obstructive cardiomyopathy", "Mitral stenosis", "Severe aortic regurgitation"], ans: 4 },
+        { q: "Angioedema is a more common side effect with:", opts: ["ARBs", "Sodium nitroprusside", "Thiazides", "ACE inhibitors"], ans: 3 }
+      ]
+    },
+    {
+      title: "Cardiac Dysrhythmias & Approach",
+      minutes: 15,
+      questions: [
+        { q: "In atrial fibrillation:", opts: ["The heart rate is irregularly irregular", "P wave is clearly present on ECG", "Anticoagulant is never necessary", "None of the above", "All of the above"], ans: 0 },
+        { q: "Heart rate in sinus tachycardia:", opts: ["60 - 100 bpm", "< 60 bpm", "> 60 bpm", "< 100 bpm", "> 100 bpm"], ans: 4 },
+        { q: "Complete (3rd degree) AV block is characterized by:", opts: ["Prolonged PR interval only", "Dropped beat after progressive PR prolongation", "Dropped beat without PR prolongation", "Sinus impulse in atrium cannot propagate to ventricle (AV dissociation)", "Delayed conduction only"], ans: 3 },
+        { q: "Strong vagal tone causes:", opts: ["Tachycardia", "Bradycardia", "Hypertension", "Heart failure", "Atrial flutter"], ans: 1 },
+        { q: "Supraventricular tachycardia arises from:", opts: ["The ventricle", "The His-Purkinje system", "The sinus node only", "The AV node only", "The atrium or atrioventricular junction"], ans: 4 },
+        { q: "Pacemaker is the treatment of:", opts: ["Tachyarrhythmia", "Bradyarrhythmia", "Hypertension", "None of the above"], ans: 1 },
+        { q: "Common causes of bilateral lower limb edema include all EXCEPT:", opts: ["Cardiac edema", "Hepatic edema", "Renal edema", "Deep vein thrombosis (DVT)", "Nutritional edema"], ans: 3 },
+        { q: "Non-life-threatening cause of chest pain among the following:", opts: ["Pleurisy", "Acute myocardial infarction", "Tension pneumothorax", "Aortic dissection", "Pulmonary embolism"], ans: 0 }
+      ]
+    }
+  ],
+  "Pulmonology": [
+    {
+      title: "Pulmonary Vascular Disease & PE",
+      minutes: 15,
+      questions: [
+        { q: "A 35-year-old woman with primary pulmonary hypertension starts an endothelin receptor antagonist. Aim of treatment:", opts: ["Increase blood flow to lungs", "Reduce secondary pulmonary fibrosis", "Reduce pulmonary vascular resistance leading to reduced RV systolic pressure", "Decrease pulmonary venous pressure", "Increase venous oxygen saturation"], ans: 2 },
+        { q: "A 60-year-old man has suspected pulmonary hypertension (loud P2, parasternal heave). Single most important test to confirm diagnosis:", opts: ["Echocardiography", "High-resolution CT thorax", "Cardiac catheterization", "Pulmonary angiography", "V/Q scan"], ans: 2 },
+        { q: "What is the mechanism of action of bosentan?", opts: ["Soluble guanylate cyclase activator", "PDE-5 inhibitor", "Endothelin receptor antagonist", "Prostanoid", "Calcium channel blocker"], ans: 2 },
+        { q: "What is the most common chest X-ray finding in patients with pulmonary embolism?", opts: ["Right heart enlargement", "Normal", "Pleural effusion", "Linear atelectasis", "Westermark sign"], ans: 1 },
+        { q: "Most appropriate initial lung imaging in suspected PE if chest X-ray is normal:", opts: ["Pulmonary angiography", "Echocardiogram", "MRI thorax", "Ventilation-perfusion scan", "Computed tomographic pulmonary angiography (CTPA)"], ans: 4 },
+        { q: "A 24-year-old woman (34 weeks pregnant) presents with pleuritic chest pain and clinical signs of left calf DVT. Most appropriate investigation:", opts: ["D-dimer", "Compression duplex Doppler ultrasound", "CTPA", "Venogram", "V/Q scan"], ans: 1 },
+        { q: "A 45-year-old female develops provoked PE 10 days post-hysterectomy. How long should she be anticoagulated?", opts: ["Not suitable", "At least 4 weeks", "At least 3 months", "At least 6 months", "12 months"], ans: 2 }
+      ]
+    },
+    {
+      title: "COPD, Asthma, Cystic Fibrosis & Lung Infection",
+      minutes: 25,
+      questions: [
+        { q: "Chest examination in bronchial asthma — which is NOT true?", opts: ["Anteroposterior diameter = Transverse diameter", "Transverse ribs", "Narrow subcostal angle", "Bilateral restricted chest movement"], ans: 2 },
+        { q: "True about reliever medication in mild intermittent asthma:", opts: ["Short-acting beta agonist (SABA)", "Long-acting beta agonist", "Short-acting beta antagonist", "Systemic steroid"], ans: 0 },
+        { q: "The type of emphysema commonly caused by cigarette smoking is:", opts: ["Panacinar", "Centriacinar", "Distal acinar", "Irregular"], ans: 1 },
+        { q: "Chronic bronchitis is characterized by cough & expectoration daily for at least ___ successive months for 2 successive years:", opts: ["3", "1", "2", "6"], ans: 0 },
+        { q: "Major morphological change seen in chronic bronchitis:", opts: ["Leukocyte infiltration", "Decreased goblet cells", "Smooth muscle hypertrophy", "Increased mucosal gland depth (Reid index)"], ans: 3 },
+        { q: "Non-pharmacological therapy of COPD includes all EXCEPT:", opts: ["Diet regulation", "Exercise", "Long-term oxygen therapy", "Corticosteroids"], ans: 3 },
+        { q: "Local signs of COPD include all EXCEPT:", opts: ["Increased A-P diameter", "Diminished chest expansion", "Rhonchi", "Dullness on percussion"], ans: 3 },
+        { q: "Cystic fibrosis is inherited as:", opts: ["X-linked", "Autosomal dominant", "Mitochondrial", "Autosomal recessive"], ans: 3 },
+        { q: "The gene defect in cystic fibrosis is:", opts: ["HFE gene", "BRCA gene", "PLA2", "CFTR"], ans: 3 },
+        { q: "Most common respiratory problem associated with cystic fibrosis:", opts: ["Asthma", "Interstitial lung disease", "Bronchiectasis", "Pleurisy"], ans: 2 },
+        { q: "First-line treatment in uncomplicated community-acquired pneumonia:", opts: ["Quinolones", "Aminoglycosides", "Metronidazole", "Amoxicillin", "Flucloxacillin"], ans: 3 },
+        { q: "Regarding CURB-65 score, which is TRUE?", opts: ["SBP > 90 scores 1 point", "BUN < 18 scores 1 point", "Diastolic BP <= 60 mmHg scores 1 point", "Respiratory rate < 20 scores 1 point", "Age < 65 scores 1 point"], ans: 2 },
+        { q: "A patient with a CURB-65 score of 4–5 requires:", opts: ["Outpatient treatment", "No hospital admission", "Intensive care (ICU) admission", "Oral antibiotics only"], ans: 2 }
+      ]
+    }
+  ],
+  "Hematology & Nephrology": [
+    {
+      title: "Hematology & Renal Physiology",
+      minutes: 20,
+      questions: [
+        { q: "Chronic myeloid leukemia (CML) is caused by translocation between which chromosomes?", opts: ["9 and 22", "8 and 22", "11 and 21", "10 and 20", "5 and 22"], ans: 0 },
+        { q: "The size of the spleen in chronic myeloid leukemia is usually:", opts: ["Mild enlargement", "Moderate enlargement", "Huge enlargement", "Atrophied", "Autosplenectomy"], ans: 2 },
+        { q: "Which of the following is effective in dissolving a clot after vessel repair?", opts: ["Hageman factor", "Plasminogen / Plasmin", "Christmas factor", "Tissue factor"], ans: 1 },
+        { q: "Hemophilias A and B are hereditary deficiencies of which coagulation factors, respectively?", opts: ["VIII and IX", "XI and VIII", "XI and IX", "VII and IX"], ans: 0 },
+        { q: "Which condition is NOT associated with microcytic anemia?", opts: ["Iron deficiency anemia", "Aplastic anemia", "Sideroblastic anemia", "Thalassemia"], ans: 1 },
+        { q: "Pure red cell aplasia is commonly associated with:", opts: ["Lymphoma", "Thymoma", "Leukemia", "Megaloblastic anemia"], ans: 1 },
+        { q: "Which would diminish the renal corticomedullary osmotic gradient?", opts: ["Increased vasopressin", "Increased blood flow through the renal medulla", "Sympathetic activation", "RAAS activation", "Increased urea recycling"], ans: 1 },
+        { q: "Select the correct statement about proximal convoluted tubules:", opts: ["K+ is secreted via aldosterone", "Glucose, amino acids & filtered proteins are completely reabsorbed", "Only 10% of filtered water is reabsorbed", "PTH increases phosphate reabsorption"], ans: 1 },
+        { q: "The primary renal site for secretion of organic ions (urate, creatinine) is:", opts: ["Proximal tubule", "Loop of Henle", "Distal tubule", "Collecting duct"], ans: 0 },
+        { q: "The glomerular filtration barrier is composed of all EXCEPT:", opts: ["Fenestrated capillary endothelium", "Macula densa", "Glomerular basement membrane", "Podocytes"], ans: 1 }
+      ]
+    }
+  ]
+};
+
+let db = JSON.parse(localStorage.getItem('med3_qbank_v5')) || DEFAULT_DATA;
+let stats = JSON.parse(localStorage.getItem('med3_stats_v5')) || { took: 0, totalPct: 0, bestScores: {} };
+let examConfig = JSON.parse(localStorage.getItem('med3_exam_v5')) || { label: "Medicine III Mid-Exam", date: "2026-12-15" };
+
+let currentSubject = null;
+let activeQuiz = null;
+let currentIdx = 0;
+let timerInterval = null;
+let secondsLeft = 0;
+
+function saveState() {
+  localStorage.setItem('med3_qbank_v5', JSON.stringify(db));
+  localStorage.setItem('med3_stats_v5', JSON.stringify(stats));
+  localStorage.setItem('med3_exam_v5', JSON.stringify(examConfig));
+}
+
+function updateCountdown() {
+  const diff = Math.ceil((new Date(examConfig.date) - new Date()) / (1000 * 60 * 60 * 24));
+  document.getElementById('exam-label').innerText = examConfig.label;
+  document.getElementById('days-left').innerText = diff > 0 ? `${diff} days` : "Exam Day!";
+}
+
+function editExamDate() {
+  const newDate = prompt("Enter your exam date (YYYY-MM-DD):", examConfig.date);
+  if (newDate && !isNaN(Date.parse(newDate))) {
+    examConfig.date = newDate;
+    saveState();
+    updateCountdown();
+  }
+}
+
+function hideAll() {
+  ['view-home', 'view-subject', 'view-quiz', 'view-results', 'view-admin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('nav-home').classList.remove('active');
+  document.getElementById('nav-admin').classList.remove('active');
+  clearInterval(timerInterval);
+}
+
+function showHome() {
+  hideAll();
+  document.getElementById('view-home').classList.remove('hidden');
+  document.getElementById('nav-home').classList.add('active');
+  updateCountdown();
+  renderHome();
+}
+
+function showAdmin() {
+  hideAll();
+  document.getElementById('view-admin').classList.remove('hidden');
+  document.getElementById('nav-admin').classList.add('active');
+}
+
+function renderHome() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('subject-grid');
+  grid.innerHTML = '';
+
+  let totalLectures = 0, totalQs = 0;
+  Object.keys(db).forEach(subj => {
+    const lectures = db[subj];
+    const qCount = lectures.reduce((sum, l) => sum + l.questions.length, 0);
+    totalLectures += lectures.length;
+    totalQs += qCount;
+
+    if (query && !subj.toLowerCase().includes(query) && !lectures.some(l => l.title.toLowerCase().includes(query))) return;
+
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.onclick = () => openSubject(subj);
+    card.innerHTML = `
+      <div class="subject-icon">${subj[0]}</div>
+      <div class="subject-name">${subj}</div>
+      <div class="badge">${lectures.length} exams</div>
+      <div class="q-count">${qCount} questions</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('stat-exams').innerText = totalLectures;
+  document.getElementById('stat-qs').innerText = totalQs;
+  document.getElementById('stat-took').innerText = stats.took;
+  document.getElementById('stat-avg').innerText = stats.took ? Math.round(stats.totalPct / stats.took) + '%' : '0%';
+}
+
+function openSubject(subj) {
+  currentSubject = subj;
+  hideAll();
+  document.getElementById('view-subject').classList.remove('hidden');
+  document.getElementById('subj-title').innerText = subj;
+
+  const list = document.getElementById('lecture-list');
+  list.innerHTML = '';
+
+  db[subj].forEach((lec, idx) => {
+    const key = `${subj}::${lec.title}`;
+    const best = stats.bestScores[key];
+    const row = document.createElement('div');
+    row.className = 'lecture-card';
+    row.innerHTML = `
+      <div>
+        <div class="lecture-title">${lec.title}</div>
+        <div class="lecture-meta">${lec.questions.length} questions · ${lec.minutes || 15} min</div>
+      </div>
+      <div class="lecture-actions">
+        ${best !== undefined ? `<span class="score-pill">Best ${best}%</span>` : ''}
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" onclick="startLecture(${idx}, false)">Start</button>
+          <button class="btn" onclick="startLecture(${idx}, true)">🔀 Shuffle</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function startLecture(lecIdx, shuffle) {
+  const lec = db[currentSubject][lecIdx];
+  let qs = JSON.parse(JSON.stringify(lec.questions));
+  if (shuffle) qs.sort(() => Math.random() - 0.5);
+  launchQuiz(lec.title, qs, lec.minutes || 15, `${currentSubject}::${lec.title}`);
+}
+
+function startMixedQuiz(allQuestions) {
+  let pool = [];
+  db[currentSubject].forEach(l => pool.push(...JSON.parse(JSON.stringify(l.questions))));
+  pool.sort(() => Math.random() - 0.5);
+  if (!allQuestions) pool = pool.slice(0, 10);
+  launchQuiz(`${currentSubject} — ${allQuestions ? 'Full Shuffled Exam' : 'Random 10 Mix'}`, pool, Math.max(10, pool.length), null);
+}
+
+function launchQuiz(title, questions, minutes, statKey) {
+  activeQuiz = {
+    title,
+    statKey,
+    minutes,
+    questions,
+    userAnswers: new Array(questions.length).fill(null),
+    flagged: new Array(questions.length).fill(false)
+  };
+  currentIdx = 0;
+  secondsLeft = minutes * 60;
+
+  hideAll();
+  document.getElementById('view-quiz').classList.remove('hidden');
+  document.getElementById('quiz-title').innerText = title;
+
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    if (secondsLeft <= 0) { finishQuiz(); return; }
+    const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+    const s = String(secondsLeft % 60).padStart(2, '0');
+    document.getElementById('quiz-timer').innerText = `${m}:${s}`;
+  }, 1000);
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qObj = activeQuiz.questions[currentIdx];
+  const chosen = activeQuiz.userAnswers[currentIdx];
+  const answeredCount = activeQuiz.userAnswers.filter(a => a !== null).length;
+
+  document.getElementById('quiz-answered-count').innerText = `${answeredCount} of ${activeQuiz.questions.length} answered`;
+  document.getElementById('q-number-label').innerText = `Question ${currentIdx + 1} of ${activeQuiz.questions.length}`;
+  document.getElementById('q-text').innerText = qObj.q;
+
+  const flagBtn = document.getElementById('flag-btn');
+  flagBtn.className = activeQuiz.flagged[currentIdx] ? 'flag-btn flagged' : 'flag-btn';
+  flagBtn.innerText = activeQuiz.flagged[currentIdx] ? '⚑ Flagged for review' : '⚑ Flag for review';
+
+  const optContainer = document.getElementById('options-container');
+  optContainer.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+
+  qObj.opts.forEach((optText, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerText = `${letters[i]}. ${optText}`;
+    if (chosen !== null) {
+      btn.disabled = true;
+      if (i === qObj.ans) btn.classList.add('correct');
+      else if (i === chosen) btn.classList.add('wrong');
+    } else {
+      btn.onclick = () => selectOption(i);
+    }
+    optContainer.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback-box');
+  if (chosen !== null) {
+    fb.classList.remove('hidden');
+    fb.innerText = chosen === qObj.ans
+      ? "✅ Correct!"
+      : `❌ Incorrect. The right answer is ${letters[qObj.ans]}. ${qObj.opts[qObj.ans]}`;
+  } else {
+    fb.classList.add('hidden');
+  }
+
+  renderGrid();
+}
+
+function selectOption(optIdx) {
+  activeQuiz.userAnswers[currentIdx] = optIdx;
+  renderQuestion();
+}
+
+function toggleFlag() {
+  activeQuiz.flagged[currentIdx] = !activeQuiz.flagged[currentIdx];
+  renderQuestion();
+}
+
+function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
+function nextQuestion() { if (currentIdx < activeQuiz.questions.length - 1) { currentIdx++; renderQuestion(); } }
+
+function renderGrid() {
+  const grid = document.getElementById('q-grid');
+  grid.innerHTML = '';
+  activeQuiz.questions.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-num';
+    btn.innerText = i + 1;
+    if (i === currentIdx) btn.classList.add('current');
+    if (activeQuiz.userAnswers[i] !== null) {
+      btn.classList.add(activeQuiz.userAnswers[i] === q.ans ? 'answered-ok' : 'answered-bad');
+    }
+    if (activeQuiz.flagged[i]) btn.classList.add('flagged');
+    btn.onclick = () => { currentIdx = i; renderQuestion(); };
+    grid.appendChild(btn);
+  });
+}
+
+function finishQuiz() {
+  clearInterval(timerInterval);
+  let correct = 0;
+  activeQuiz.questions.forEach((q, i) => {
+    if (activeQuiz.userAnswers[i] === q.ans) correct++;
+  });
+
+  const pct = Math.round((correct / activeQuiz.questions.length) * 100);
+  stats.took++;
+  stats.totalPct += pct;
+  if (activeQuiz.statKey) {
+    stats.bestScores[activeQuiz.statKey] = Math.max(stats.bestScores[activeQuiz.statKey] || 0, pct);
+  }
+  saveState();
+
+  hideAll();
+  document.getElementById('view-results').classList.remove('hidden');
+  document.getElementById('res-title').innerText = activeQuiz.title;
+  document.getElementById('res-score').innerText = `${correct} / ${activeQuiz.questions.length}`;
+  document.getElementById('res-msg').innerText = `${pct}% — ${pct >= 80 ? 'Great job, doctor!' : 'Every mistake below is a lesson.'}`;
+  document.getElementById('tab-all').innerText = `All (${activeQuiz.questions.length})`;
+  document.getElementById('tab-wrong').innerText = `Wrong only (${activeQuiz.questions.length - correct})`;
+
+  renderResultsList('all');
+}
+
+function renderResultsList(mode) {
+  document.getElementById('tab-all').classList.toggle('active', mode === 'all');
+  document.getElementById('tab-wrong').classList.toggle('active', mode === 'wrong');
+
+  const container = document.getElementById('results-review-list');
+  container.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+
+  activeQuiz.questions.forEach((q, i) => {
+    const chosen = activeQuiz.userAnswers[i];
+    const isCorrect = chosen === q.ans;
+    if (mode === 'wrong' && isCorrect) return;
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.innerHTML = `
+      <div style="font-weight:bold; margin-bottom:10px;">${i + 1}. ${q.q}</div>
+      ${chosen !== null && !isCorrect ? `<div class="option-btn wrong" style="cursor:default;">${letters[chosen]}. ${q.opts[chosen]} ✗ (Your answer)</div>` : ''}
+      ${chosen === null ? `<div class="option-btn wrong" style="cursor:default;">Unanswered</div>` : ''}
+      <div class="option-btn correct" style="cursor:default;">${letters[q.ans]}. ${q.opts[q.ans]} ✓</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function retakeLast() {
+  launchQuiz(activeQuiz.title, activeQuiz.questions, activeQuiz.minutes, activeQuiz.statKey);
+}
+
+function exitQuiz() {
+  if (currentSubject) openSubject(currentSubject);
+  else showHome();
+}
+
+function importQuestions() {
+  const subj = document.getElementById('adm-subject').value;
+  const lecTitle = document.getElementById('adm-lecture').value.trim();
+  const raw = document.getElementById('adm-raw').value.trim();
+  if (!lecTitle || !raw) return alert("Please enter both a lecture title and questions.");
+
+  const blocks = raw.split(/\n\s*\n/);
+  const parsed = [];
+
+  blocks.forEach(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.length < 3) return;
+    const qText = lines[0].replace(/^\d+[\.\-\)]\s*/, '');
+    const opts = [];
+    let ansIdx = 0;
+
+    lines.slice(1).forEach((line, idx) => {
+      let clean = line.replace(/^[A-Ea-e1-5][\.\-\)]\s*/, '');
+      if (clean.includes('*')) {
+        ansIdx = idx;
+        clean = clean.replace(/\*/g, '').trim();
+      }
+      opts.push(clean);
+    });
+    if (opts.length >= 2) parsed.push({ q: qText, opts, ans: ansIdx });
+  });
+
+  if (!parsed.length) return alert("Could not parse questions. Separate each question with a blank line and put * after the right choice.");
+
+  if (!db[subj]) db[subj] = [];
+  db[subj].push({ title: lecTitle, minutes: Math.max(10, parsed.length), questions: parsed });
+  saveState();
+  alert(`Added "${lecTitle}" with ${parsed.length} questions!`);
+  openSubject(subj);
+}
+
+function downloadUpdatedHTML() {
+  const html = document.documentElement.outerHTML.replace(
+    /const DEFAULT_DATA = \{[\s\S]*?\};\nlet db =/,
+    `const DEFAULT_DATA = ${JSON.stringify(db, null, 2)};\nlet db =`
+  );
+  const blob = new Blob(["<!DOCTYPE html>\n" + html], { type: "text/html" });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "index.html";
+  a.click();
+}
+
+showHome();
+</script>
+</body>
+</html>
